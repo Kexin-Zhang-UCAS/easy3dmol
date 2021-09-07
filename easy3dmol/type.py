@@ -1,17 +1,38 @@
-import py3Dmol
 from typing import Union, List, Optional
-
+from copy import deepcopy
 number = Union[int, float, None]
 boolean = Union[bool, None]
 string = Union[str, None]
 
+
+
+
+class Object():
+    def __init__(self,name):
+        self.name=name
+
+class GLModel(Object):
+    def __init__(self,name):
+        super().__init__(name)
+
+class GLShape(Object):
+    def __init__(self,name):
+        super().__init__(name)
+
+class GLViewer(Object):
+    def __init__(self,name):
+        super().__init__(name)
+
+class Label(Object):
+    def __init__(self,name):
+        super().__init__(name)
+
+
 function = Optional  # undefined now
-GLModel = Optional  #
-GLShape=Optional
 Gradient = Optional
 VolumeData = Optional
 ClickSphereStyleSpec = Optional
-Object=Optional
+
 Mesh=Optional
 
 _map = {"myand": "and", "myor": "or", "mynot": "not"}
@@ -29,30 +50,52 @@ class SurfaceType:
     MS = 2
     SAS = 3
     SES = 4
+class FileFormats:
+    json="json"
+    cdjson="cdjson"
+    cube="cube"
+    gro="gro"
+    cif="cif"
+    mcif="mcif"
+    mmtf="mmtf"
+    mol2="mol2"
+    pdb="pdb"
+    pqr="pqr"
+    prmtop="prmtop"
+    sdf="sdf"
+    vasp="vasp"
+    xyz="xyz"
+
+
+class argdict(dict):
+    def __init__(self):
+        super().__init__()
+    def remove(self,*l):
+        for s in l:
+            self.pop(s)
+        rms=[]
+        for item in self:
+            if self[item]==None:
+                rms.append(item)
+        for i in rms:
+            self.pop(i)
 
 
 
 
-# Base
-class Vector3(dict):
+class Vector3(argdict):
     def __init__(self, x: number, y: number, z: number):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class Dimensions(dict):
+
+class Dimensions(argdict):
     def __init__(self, w: number, h: number, d: number):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
-
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 class ColorSpec(str):
     def __init__(self,
@@ -62,7 +105,7 @@ class ColorSpec(str):
         pass
 
 
-class ArrowSpec(dict):
+class ArrowSpec(argdict):
     def __init__(self,
                  start: Vector3,
                  end: Vector3,
@@ -74,15 +117,12 @@ class ArrowSpec(dict):
                  midpos: number = None,
                  ):
         super().__init__()
-        super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
-
-class AtomSpec(dict):
+# a=ArrowSpec(start=Vector3(0,0,0),end=Vector3(10,9,100))
+# print(a)
+class AtomSpec(argdict):
     def __init__(self,
                  resn: string=None,
                  x: number=None,
@@ -109,11 +149,8 @@ class AtomSpec(dict):
                  callback: function=None,
                  invert: boolean=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
 class AtomSelectionSpec(AtomSpec):
@@ -126,24 +163,17 @@ class AtomSelectionSpec(AtomSpec):
                  expand: number=None,
                  **kwargs):
         super().__init__(**kwargs)
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
-
-class WithinSelectionSpec(dict):
+class WithinSelectionSpec(argdict):
     def __init__(self,
                  distance: number=None,
                  invert: boolean=None,
                  sel: AtomSelectionSpec=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
 class AtomSelectionSpec2(AtomSelectionSpec):
@@ -154,14 +184,11 @@ class AtomSelectionSpec2(AtomSelectionSpec):
                  mynot: AtomSelectionSpec=None,
                  **kwargs):
         super().__init__(**kwargs)
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class ColorschemeSpec(dict):
+class ColorschemeSpec(argdict):
     def __init__(self,
                  ssPyMOL: string=None,
                  ssJmol: string=None,
@@ -177,14 +204,11 @@ class ColorschemeSpec(dict):
                  map: Object=None,
                  colorfunc: function=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class LineStyleSpec(dict):
+class LineStyleSpec(argdict):
     def __init__(self,
                  hidden: boolean=None,
                  linewidth: number=None,
@@ -192,14 +216,11 @@ class LineStyleSpec(dict):
                  color: ColorSpec=None,
                  opacity: number=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class CrossStyleSpec(dict):
+class CrossStyleSpec(argdict):
     def __init__(self,
                  hidden: boolean=None,
                  linewidth: number=None,
@@ -209,14 +230,11 @@ class CrossStyleSpec(dict):
                  color: ColorSpec=None,
                  opacity: number=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class StickStyleSpec(dict):
+class StickStyleSpec(argdict):
     def __init__(self,
                  hidden: boolean=None,
                  radius: number=None,
@@ -225,14 +243,11 @@ class StickStyleSpec(dict):
                  color: ColorSpec=None,
                  opacity: number=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class SphereStyleSpec(dict):
+class SphereStyleSpec(argdict):
     def __init__(self,
                  hidden: boolean=None,
                  radius: number=None,
@@ -242,14 +257,11 @@ class SphereStyleSpec(dict):
                  opacity: number=None
                  ):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class CartoonStyleSpec(dict):
+class CartoonStyleSpec(argdict):
     def __init__(self,
                  color: ColorSpec=None,
                  style: string=None,
@@ -261,14 +273,11 @@ class CartoonStyleSpec(dict):
                  opacity: number=None,
                  In: Optional=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class AtomStyleSpec(dict):
+class AtomStyleSpec(argdict):
     def __init__(self,
                  line: LineStyleSpec=None,
                  cross: CrossStyleSpec=None,
@@ -277,27 +286,21 @@ class AtomStyleSpec(dict):
                  cartoon: CartoonStyleSpec=None,
                  clicksphere: ClickSphereStyleSpec=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class BoxSpec(dict):
+class BoxSpec(argdict):
     def __init__(self,
                  corner: Vector3=None,
                  center: Vector3=None,
                  dimesion: Union[Vector3, Dimensions, List, None]=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class CurveSpec(dict):
+class CurveSpec(argdict):
     def __init__(self,
                  points: Vector3=None,
                  smooth: number=None,
@@ -305,28 +308,22 @@ class CurveSpec(dict):
                  frowArrow: boolean=None,
                  toArrow: boolean=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class CustomShapeSpec(dict):
+class CustomShapeSpec(argdict):
     def __init__(self,
                  vertexArr: List[Vector3]=None,
                  normalArr: List[Vector3]=None,
                  faceArr: List[number]=None,
                  color: Union[ColorSpec, List[ColorSpec], None]=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class CylinderSpec(dict):
+class CylinderSpec(argdict):
     def __init__(self,
                  start: Vector3=None,
                  end: Vector3=None,
@@ -335,20 +332,17 @@ class CylinderSpec(dict):
                  toCap: CAP=None,
                  dashed: boolean=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class FileFormats(dict):
+class FileFormats(argdict):
     def __init__(self, ):
         super().__init__()
         ...
 
 
-class IsoSurfaceSpec(dict):
+class IsoSurfaceSpec(argdict):
     def __init__(self,
                  isoval: number=None,
                  color: ColorSpec=None,
@@ -364,14 +358,11 @@ class IsoSurfaceSpec(dict):
                  clickable: boolean=None,
                  callback: function=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class LabelSpec(dict):
+class LabelSpec(argdict):
     def __init__(self,
                  font: string=None,
                  fontsize: number=None,
@@ -393,32 +384,27 @@ class LabelSpec(dict):
                  frame: number=None,
                  ):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class LineSpec(dict):
+class LineSpec(argdict):
     def __init__(self,
                  start: Vector3=None,
                  end: Vector3=None
                  ):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class ParserOptionsSpec(dict):
+class ParserOptionsSpec(argdict):
     def __init__(self):
         super().__init__()
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
-
-class ShapeSpec(dict):
+class ShapeSpec(argdict):
     def __init__(self,
                  color: ColorSpec=None,
                  alpha: number=None,
@@ -429,26 +415,19 @@ class ShapeSpec(dict):
                  callback: function=None,
                  frame: number=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
-
-class SphereShapeSpec(dict):
+class SphereShapeSpec(argdict):
     def __init__(self,
                  center: Vector3=None,
                  radius: number=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class SurfaceStyleSpec(dict):
+class SurfaceStyleSpec(argdict):
     def __init__(self,
                  opacity: number=None,
                  colorscheme: ColorschemeSpec=None,
@@ -458,14 +437,11 @@ class SurfaceStyleSpec(dict):
                  volformat: string=None,
                  map: Object=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class UnitCellStyleSpec(dict):
+class UnitCellStyleSpec(argdict):
     def __init__(self,
                  box: LineStyleSpec=None,
                  astyle: ArrowSpec=None,
@@ -478,31 +454,41 @@ class UnitCellStyleSpec(dict):
                  clabel: string=None,
                  clabelstyle: string=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class ViewerGridSpec(dict):
+class ViewerGridSpec(argdict):
     def __init__(self,
                  rows: number=None,
                  cols: number=None,
                  control_all: boolean=None):
         super().__init__()
-        keys = locals().keys() - ['__class__', "self"]
-        for key in keys:
-            _key = key if key not in _map else _map[key]
-            if eval(key) != None:
-                self[_key] = eval(key)
+        self.update(deepcopy(locals()))
+        self.remove("self","__class__")
 
 
-class ViewerSpec(dict):
+class ViewerSpec(argdict):
     def __init__(self):
         super().__init__()
 
 
-class VolumetricRendererSpec(dict):
+class VolumetricRendererSpec(argdict):
     def __init__(self):
         super().__init__()
+
+
+
+
+
+# # sa=AtomSpec(elem="C")
+# # print(sa)
+#
+# import json
+# class a():
+#     def __init__(self,arg):
+#         self.arg=arg
+#
+# b=a("hello")
+# print(isinstance(b,str))
+# # print(json.dumps(b))
