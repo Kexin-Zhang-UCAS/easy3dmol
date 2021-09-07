@@ -1,4 +1,4 @@
-from typing import Union, List, Optional
+from typing import Union, List, Optional,overload
 from copy import deepcopy
 number = Union[int, float, None]
 boolean = Union[bool, None]
@@ -98,11 +98,13 @@ class Dimensions(argdict):
         self.remove("self","__class__")
 
 class ColorSpec(str):
-    def __init__(self,
-                 s="0xAF10AB"):
+    def __init__(self,s="0xAF10AB"):
         super().__init__()
-        # TODO:
-        pass
+
+
+
+
+
 
 
 class ArrowSpec(argdict):
@@ -152,17 +154,40 @@ class AtomSpec(argdict):
         self.update(deepcopy(locals()))
         self.remove("self","__class__")
 
-
-class AtomSelectionSpec(AtomSpec):
+@overload
+class AtomSelectionSpec(argdict):
     def __init__(self,
+                 resn: string = None,
+                 x: number = None,
+                 y: number = None,
+                 z: number = None,
+                 color: ColorSpec = None,
+                 surfaceColor: ColorSpec = None,
+                 elem: string = None,
+                 hetflag: boolean = None,
+                 chain: string = None,
+                 resi: number = None,
+                 icode: number = None,
+                 rescode: number = None,
+                 serial: number = None,
+                 atom: string = None,
+                 bonds: List[number] = None,
+                 ss: string = None,
+                 singBonds: boolean = None,
+                 bondOrder: List[number] = None,
+                 properties: function = None,
+                 b: number = None,
+                 pdbline: string = None,
+                 clickable: boolean = None,
+                 callback: function = None,
+                 invert: boolean = None,
+                 ### additional
                  model: GLModel=None,
-                 bonds: number=None,
                  predicate: function=None,
-                 invert: boolean=None,
                  byres: boolean=None,
                  expand: number=None,
-                 **kwargs):
-        super().__init__(**kwargs)
+                 ):
+        super().__init__()
         self.update(deepcopy(locals()))
         self.remove("self","__class__")
 
@@ -175,15 +200,45 @@ class WithinSelectionSpec(argdict):
         self.update(deepcopy(locals()))
         self.remove("self","__class__")
 
-
+@overload
 class AtomSelectionSpec2(AtomSelectionSpec):
     def __init__(self,
+                 resn: string = None,
+                 x: number = None,
+                 y: number = None,
+                 z: number = None,
+                 color: ColorSpec = None,
+                 surfaceColor: ColorSpec = None,
+                 elem: string = None,
+                 hetflag: boolean = None,
+                 chain: string = None,
+                 resi: number = None,
+                 icode: number = None,
+                 rescode: number = None,
+                 serial: number = None,
+                 atom: string = None,
+                 bonds: List[number] = None,
+                 ss: string = None,
+                 singBonds: boolean = None,
+                 bondOrder: List[number] = None,
+                 properties: function = None,
+                 b: number = None,
+                 pdbline: string = None,
+                 clickable: boolean = None,
+                 callback: function = None,
+                 invert: boolean = None,
+                 ### additional
+                 model: GLModel = None,
+                 predicate: function = None,
+                 byres: boolean = None,
+                 expand: number = None,
+                 ### overload
                  within: WithinSelectionSpec=None,
                  myand: List[AtomSelectionSpec]=None,
                  myor: List[AtomSelectionSpec]=None,
                  mynot: AtomSelectionSpec=None,
-                 **kwargs):
-        super().__init__(**kwargs)
+                 ):
+        super().__init__()
         self.update(deepcopy(locals()))
         self.remove("self","__class__")
 
